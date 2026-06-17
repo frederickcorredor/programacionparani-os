@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programación Para Niños · Frederick Corredor</title>
+<meta name="description" content="Tu hijo puede crear videojuegos y páginas web. Clases 1 a 1 en vivo — HTML, Roblox, Godot y Blender.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── RESET ─────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  /* ── TOKENS ─────────────────────────────────── */
+  :root {
+    --bg0: #0d0d1a;
+    --bg1: #12122a;
+    --bg2: #1a1a38;
+    --bg3: #222248;
+    --accent: #00d4aa;
+    --accent2: #7c6fff;
+    --accent3: #ff6b6b;
+    --text: #e8e8f0;
+    --text-muted: #9090b0;
+    --border: rgba(255,255,255,0.08);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+
+  body {
+    background: var(--bg0);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ─────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 clamp(1rem, 5vw, 3rem);
+    height: 60px;
+    background: rgba(13,13,26,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); text-decoration: none; letter-spacing: -0.02em;
+  }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none; font-size: 0.875rem;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: #0d0d1a !important;
+    padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 0.875rem !important;
+  }
+  .nav-cta:hover { opacity: 0.9; }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── HERO ─────────────────────────────────── */
+  #hero {
+    position: relative; height: 100svh; min-height: 560px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #hero-canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .hero-overlay {
+    position: relative; z-index: 2;
+    text-align: center; pointer-events: none;
+    padding: 0 1rem;
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(0,212,170,.15);
+    border: 1px solid rgba(0,212,170,.3); color: var(--accent);
+    font-size: 0.75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 100px; margin-bottom: 1.2rem;
+  }
+  .hero-h1 {
+    font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 700; line-height: 1.05; letter-spacing: -0.03em;
+    color: #fff; margin-bottom: 1rem;
+  }
+  .hero-h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-muted);
+    max-width: 500px; margin: 0 auto 2rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; pointer-events: all; }
+  .btn-primary {
+    background: var(--accent); color: #0d0d1a; font-weight: 700;
+    padding: 14px 28px; border-radius: 10px; text-decoration: none;
+    font-family: var(--font-display); font-size: 1rem;
+    transition: transform .15s, opacity .15s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); opacity: .92; }
+  .btn-ghost {
+    background: transparent; color: var(--text); font-weight: 500;
+    padding: 14px 28px; border-radius: 10px; text-decoration: none;
+    border: 1px solid var(--border); font-size: 1rem;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,.25); color: #fff; }
+
+  .hero-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; font-size: 0.75rem; color: var(--text-muted);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    animation: bounce 2s infinite;
+  }
+  .hero-hint svg { width: 20px; height: 20px; }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* ── CSS2D labels (Three.js) ─────────────────── */
+  .label3d {
+    background: rgba(13,13,26,0.88);
+    border: 1px solid rgba(0,212,170,.4);
+    color: #fff; font-family: var(--font-display);
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+    pointer-events: none; white-space: nowrap;
+    text-shadow: none; backdrop-filter: blur(4px);
+    transform: translateX(-50%);
+  }
+
+  /* ── COURSE PANEL ─────────────────────────────────── */
+  #course-panel {
+    position: fixed; top: 50%; right: 2rem;
+    transform: translateY(-50%) translateX(120%);
+    z-index: 50; width: min(320px, calc(100vw - 2rem));
+    background: var(--bg1); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+    box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    transition: transform .4s cubic-bezier(.16,1,.3,1);
+  }
+  #course-panel.open { transform: translateY(-50%) translateX(0); }
+  .panel-close {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 1.2rem; line-height: 1;
+    padding: 4px; border-radius: 6px; transition: color .2s;
+  }
+  .panel-close:hover { color: var(--text); }
+  .panel-emoji { font-size: 2.5rem; margin-bottom: .6rem; }
+  .panel-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-bottom: .25rem; }
+  .panel-meta { font-size: .8rem; color: var(--text-muted); margin-bottom: .75rem; }
+  .panel-desc { font-size: .9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.2rem; }
+  .panel-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.2rem; }
+  .tag {
+    font-size: .72rem; font-weight: 600; padding: 3px 10px; border-radius: 100px;
+    background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border);
+  }
+  .panel-wa {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 12px; border-radius: 10px;
+    background: #25d366; color: #fff; text-decoration: none;
+    font-weight: 700; font-family: var(--font-display); font-size: .95rem;
+    transition: opacity .2s;
+  }
+  .panel-wa:hover { opacity: .9; }
+
+  /* ── SECTIONS ─────────────────────────────────── */
+  section { padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 5vw, 3rem); }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: .75rem;
+  }
+  .section-h2 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; line-height: 1.1; letter-spacing: -.02em;
+    color: #fff; margin-bottom: 1rem;
+  }
+  .section-h2 em { font-style: normal; color: var(--accent); }
+  .section-sub { color: var(--text-muted); max-width: 560px; line-height: 1.7; }
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── PROBLEMA / SOLUCION ─────────────────────────────────── */
+  #problema { background: var(--bg1); }
+  .prob-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+    margin-top: 3rem;
+  }
+  @media (max-width: 700px) { .prob-grid { grid-template-columns: 1fr; } }
+  .prob-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .prob-list li {
+    display: flex; align-items: flex-start; gap: .75rem;
+    color: var(--text-muted); font-size: .95rem; line-height: 1.5;
+  }
+  .prob-icon-x {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255,107,107,.15); display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; color: var(--accent3); margin-top: 2px;
+  }
+  .sol-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+  .sol-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .sol-icon {
+    flex-shrink: 0; width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(0,212,170,.12); border: 1px solid rgba(0,212,170,.2);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  }
+  .sol-text-title { font-weight: 600; font-size: .95rem; color: #fff; margin-bottom: .2rem; }
+  .sol-text-desc { font-size: .85rem; color: var(--text-muted); }
+
+  /* ── CURSOS ─────────────────────────────────── */
+  #cursos { background: var(--bg0); }
+  .cursos-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .curso-card {
+    background: var(--bg1); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+    transition: transform .2s, border-color .2s;
+    cursor: pointer;
+  }
+  .curso-card:hover { transform: translateY(-4px); }
+  .curso-card[data-color="blue"]:hover { border-color: rgba(74,144,217,.5); }
+  .curso-card[data-color="red"]:hover { border-color: rgba(224,82,82,.5); }
+  .curso-card[data-color="green"]:hover { border-color: rgba(91,184,110,.5); }
+  .curso-card[data-color="amber"]:hover { border-color: rgba(245,166,35,.5); }
+  .curso-thumb {
+    height: 160px; display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; position: relative; overflow: hidden;
+  }
+  .curso-thumb[data-color="blue"] { background: linear-gradient(135deg, #1a2a4a, #1e3a6e); }
+  .curso-thumb[data-color="red"]  { background: linear-gradient(135deg, #2a1a1a, #4a1010); }
+  .curso-thumb[data-color="green"]{ background: linear-gradient(135deg, #1a2a1a, #0f3a20); }
+  .curso-thumb[data-color="amber"]{ background: linear-gradient(135deg, #2a2010, #3a2a00); }
+  .curso-body { padding: 1.25rem; }
+  .curso-ages {
+    font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: .4rem;
+  }
+  .curso-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: .4rem; }
+  .curso-desc { font-size: .85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem; }
+  .curso-meta { display: flex; gap: .75rem; }
+  .curso-meta span {
+    font-size: .75rem; background: var(--bg3); padding: 3px 10px;
+    border-radius: 100px; color: var(--text-muted);
+  }
+
+  /* ── NOSOTROS ─────────────────────────────────── */
+  #nosotros { background: var(--bg1); }
+  .nosotros-grid {
+    display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; align-items: center;
+    margin-top: 3rem;
+  }
+  @media (max-width: 750px) { .nosotros-grid { grid-template-columns: 1fr; } }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem 1.25rem;
+  }
+  .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: .8rem; color: var(--text-muted); margin-top: .1rem; }
+  .features-list { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+  .features-list li {
+    display: flex; align-items: center; gap: .75rem;
+    font-size: .9rem; color: var(--text-muted);
+  }
+  .feat-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(0,212,170,.15); border: 1px solid rgba(0,212,170,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .65rem; color: var(--accent); flex-shrink: 0;
+  }
+  .code-card {
+    background: #0d0d1a; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .code-bar {
+    background: var(--bg3); padding: .5rem 1rem;
+    display: flex; gap: .5rem; align-items: center;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .code-body { padding: 1.25rem 1.5rem; font-family: monospace; font-size: .85rem; line-height: 1.9; }
+  .ck { color: #7c6fff; } .cs { color: #00d4aa; } .cv { color: #ff9f7f; }
+  .cn { color: #e8e8f0; } .cc { color: #606080; }
+
+  /* ── TESTIMONIOS ─────────────────────────────────── */
+  #testimonios { background: var(--bg0); }
+  .testi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .testi-card {
+    background: var(--bg1); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+  }
+  .stars { color: var(--accent); font-size: .9rem; margin-bottom: 1rem; }
+  .testi-text { font-size: .9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: .75rem; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; font-weight: 700; color: #fff;
+  }
+  .testi-name { font-size: .9rem; font-weight: 600; color: #fff; }
+  .testi-role { font-size: .75rem; color: var(--text-muted); }
+
+  /* ── PRECIOS ─────────────────────────────────── */
+  #precios { background: var(--bg1); }
+  .precio-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    margin-top: 3rem; align-items: start;
+  }
+  @media (max-width: 750px) { .precio-wrap { grid-template-columns: 1fr; } }
+  .precio-card {
+    background: var(--bg2); border: 2px solid var(--accent);
+    border-radius: var(--radius-lg); padding: 2rem;
+    text-align: center;
+  }
+  .precio-label {
+    font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: .75rem;
+  }
+  .precio-amount { font-family: var(--font-display); font-size: 2.8rem; font-weight: 700; color: #fff; }
+  .precio-period { font-size: .85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .precio-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.75rem; }
+  .precio-list li { display: flex; gap: .6rem; font-size: .9rem; color: var(--text-muted); align-items: flex-start; }
+  .precio-list li::before { content: "✓"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .tabla-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  thead th {
+    background: var(--bg3); padding: .75rem 1rem; text-align: left;
+    color: var(--text-muted); font-weight: 600; font-size: .75rem;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; background: rgba(0,212,170,.12); color: var(--accent); }
+  tbody td { padding: .7rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  tbody td:last-child { color: var(--accent); font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── CONTACTO ─────────────────────────────────── */
+  #contacto { background: var(--bg0); }
+  .contacto-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem;
+    margin-top: 3rem; align-items: start;
+  }
+  @media (max-width: 750px) { .contacto-grid { grid-template-columns: 1fr; } }
+  .contact-info { display: flex; flex-direction: column; gap: 1.25rem; }
+  .contact-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .contact-icon {
+    width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
+    background: var(--bg2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .contact-label { font-size: .75rem; color: var(--text-muted); margin-bottom: .15rem; }
+  .contact-value { font-size: .95rem; color: var(--text); font-weight: 500; }
+  .form-card {
+    background: var(--bg1); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 2rem;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+  .form-group label { font-size: .8rem; color: var(--text-muted); font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; color: var(--text);
+    font-family: var(--font-body); font-size: .9rem;
+    outline: none; transition: border-color .2s; width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+  .form-group select option { background: var(--bg2); }
+
+  /* ── FOOTER ─────────────────────────────────── */
+  footer {
+    background: var(--bg1); border-top: 1px solid var(--border);
+    padding: 2rem clamp(1rem, 5vw, 3rem);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo { font-family: var(--font-display); font-weight: 700; color: var(--accent); font-size: .95rem; }
+  .footer-copy { font-size: .8rem; color: var(--text-muted); }
+  .footer-links { display: flex; gap: 1rem; }
+  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: .85rem; transition: color .2s; }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ── SCROLL ANIMATIONS ─────────────────────────────────── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ── SCROLLBAR ─────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg0); }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">PROG&lt;NIÑOS/&gt;</a>
+  <ul class="nav-links">
+    <li><a href="#cursos">Cursos</a></li>
+    <li><a href="#precios">Precio</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="https://wa.me/573507687220?text=Hola%20Frederick%2C%20quiero%20info%20sobre%20las%20clases" class="nav-cta">Clase gratis</a></li>
+  </ul>
+</nav>
+
+<!-- HERO 3D -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="hero-overlay">
+    <div class="hero-badge">✦ Inscripciones abiertas</div>
+    <h1 class="hero-h1">Tu hijo puede crear<br><span>videojuegos reales</span></h1>
+    <p class="hero-sub">Clases 1 a 1 en vivo. Explora los mundos de abajo y descubre qué quiere crear.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/573507687220?text=Hola%20Frederick%2C%20quiero%20mi%20clase%20gratis" class="btn-primary">Clase gratis →</a>
+      <a href="#cursos" class="btn-ghost">Ver cursos</a>
+    </div>
+  </div>
+
+  <div class="hero-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Arrastra el planeta · haz clic en un edificio
+  </div>
+</section>
+
+<!-- COURSE PANEL (overlay) -->
+<div id="course-panel">
+  <button class="panel-close" id="panel-close">✕</button>
+  <div class="panel-emoji" id="p-emoji">🌐</div>
+  <div class="panel-title" id="p-title">Desarrollo Web</div>
+  <div class="panel-meta" id="p-meta">📅 12 semanas · 10–18 años</div>
+  <div class="panel-desc" id="p-desc">Diseña tu primera página web.</div>
+  <div class="panel-tags" id="p-tags"></div>
+  <a class="panel-wa" id="p-wa" href="#">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.543 4.072 1.494 5.786L.057 23.535a.5.5 0 00.609.609l5.749-1.437A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.97 9.97 0 01-5.04-1.364l-.36-.214-3.737.934.951-3.641-.235-.374A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Consultar por WhatsApp
+  </a>
+</div>
+
+<hr class="divider">
+
+<!-- EL PROBLEMA -->
+<section id="problema">
+  <div class="container">
+    <div class="section-label">El problema</div>
+    <h2 class="section-h2">No es solo tiempo de pantalla,<br><em>es lo que hacen con él</em></h2>
+    <div class="prob-grid reveal">
+      <div>
+        <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem;">Muchos niños pasan horas frente a pantallas sin desarrollar habilidades reales. Las clases grupales no se adaptan a su ritmo ni a sus intereses.</p>
+        <ul class="prob-list">
+          <li><div class="prob-icon-x">✕</div><span>Consume contenido sin crear nada propio.</span></li>
+          <li><div class="prob-icon-x">✕</div><span>No desarrolla habilidades útiles para su futuro.</span></li>
+          <li><div class="prob-icon-x">✕</div><span>Le cuesta concentrarse y resolver problemas.</span></li>
+          <li><div class="prob-icon-x">✕</div><span>Las clases grupales no se adaptan a su ritmo.</span></li>
+        </ul>
+      </div>
+      <div class="sol-card">
+        <p style="font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem;">Con este programa desarrolla</p>
+        <div class="sol-item">
+          <div class="sol-icon">🧠</div>
+          <div><div class="sol-text-title">Lógica</div><div class="sol-text-desc">Resuelve problemas de forma inteligente y estructurada.</div></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-icon">🚀</div>
+          <div><div class="sol-text-title">Creatividad</div><div class="sol-text-desc">Convierte ideas en proyectos reales que puede mostrar.</div></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-icon">🎯</div>
+          <div><div class="sol-text-title">Concentración</div><div class="sol-text-desc">Mejora su enfoque trabajando en proyectos que le apasionan.</div></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-icon">💻</div>
+          <div><div class="sol-text-title">Habilidades reales</div><div class="sol-text-desc">Sale con un portafolio: un juego, una web, un personaje 3D.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CURSOS -->
+<section id="cursos">
+  <div class="container">
+    <div class="section-label">Elige tu aventura</div>
+    <h2 class="section-h2">Cuatro mundos,<br><em>un solo objetivo</em></h2>
+    <p class="section-sub">Cada curso está diseñado para que los niños aprendan creando proyectos reales desde el primer día.</p>
+    <div class="cursos-grid">
+
+      <div class="curso-card reveal" data-color="blue">
+        <div class="curso-thumb" data-color="blue">🌐</div>
+        <div class="curso-body">
+          <div class="curso-ages">10–18 años</div>
+          <div class="curso-title">HTML & CSS Creativo</div>
+          <div class="curso-desc">Diseña tu primera página web con animaciones, colores y tu estilo propio. Aprende HTML, CSS y JavaScript básico.</div>
+          <div class="curso-meta"><span>📅 12 semanas</span><span>👤 Individual</span></div>
+        </div>
+      </div>
+
+      <div class="curso-card reveal" data-color="red">
+        <div class="curso-thumb" data-color="red">🟥</div>
+        <div class="curso-body">
+          <div class="curso-ages">10–18 años</div>
+          <div class="curso-title">Programación en Roblox</div>
+          <div class="curso-desc">Crea tus propios juegos en Roblox usando Lua. Construye mundos, personajes y mecánicas únicas.</div>
+          <div class="curso-meta"><span>📅 16 semanas</span><span>👤 Individual</span></div>
+        </div>
+      </div>
+
+      <div class="curso-card reveal" data-color="green">
+        <div class="curso-thumb" data-color="green">🎮</div>
+        <div class="curso-body">
+          <div class="curso-ages">12–18 años</div>
+          <div class="curso-title">Videojuegos con Godot</div>
+          <div class="curso-desc">Diseña y programa videojuegos 2D completos con Godot 4 y GDScript. Desde la idea hasta publicar tu juego.</div>
+          <div class="curso-meta"><span>📅 20 semanas</span><span>👤 Individual</span></div>
+        </div>
+      </div>
+
+      <div class="curso-card reveal" data-color="amber">
+        <div class="curso-thumb" data-color="amber">🧊</div>
+        <div class="curso-body">
+          <div class="curso-ages">12–18 años</div>
+          <div class="curso-title">Personajes en Blender</div>
+          <div class="curso-desc">Modela, riggea y anima tus propios personajes 3D con Blender. Crea los héroes de tus propios videojuegos.</div>
+          <div class="curso-meta"><span>📅 16 semanas</span><span>👤 Individual</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="container">
+    <div class="section-label">Por qué elegirnos</div>
+    <h2 class="section-h2">Enseñamos creando,<br><em>no memorizando</em></h2>
+    <div class="nosotros-grid">
+      <div class="reveal">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num">+100</div><div class="stat-label">Estudiantes formados</div></div>
+          <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">Años de experiencia</div></div>
+          <div class="stat-card"><div class="stat-num">2×</div><div class="stat-label">Clases por semana</div></div>
+          <div class="stat-card"><div class="stat-num">1:1</div><div class="stat-label">Clases individuales</div></div>
+        </div>
+        <ul class="features-list">
+          <li><div class="feat-check">✓</div>Clases personalizadas en vivo, sin grabaciones.</li>
+          <li><div class="feat-check">✓</div>Aprendizaje práctico: cada clase = un proyecto real.</li>
+          <li><div class="feat-check">✓</div>Instructor desarrollador profesional, no solo teórico.</li>
+          <li><div class="feat-check">✓</div>Horario flexible adaptado a tu familia.</li>
+          <li><div class="feat-check">✓</div>Cancela cuando quieras, sin contratos.</li>
+        </ul>
+      </div>
+      <div class="code-card reveal">
+        <div class="code-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+        <div class="code-body">
+          <div><span class="ck">const</span> <span class="cs">fundador</span> <span class="cn">=</span> <span class="cv">"Frederick Corredor"</span></div>
+          <div><span class="ck">const</span> <span class="cs">rol</span> <span class="cn">=</span> <span class="cv">"Desarrollador & Profe"</span></div>
+          <div>&nbsp;</div>
+          <div><span class="ck">const</span> <span class="cs">experiencia</span> <span class="cn">=</span> <span class="cv">10</span> <span class="cc">// años</span></div>
+          <div><span class="ck">const</span> <span class="cs">alumnos</span> <span class="cn">=</span> <span class="cv">"+100"</span></div>
+          <div>&nbsp;</div>
+          <div><span class="ck">function</span> <span class="cs">enseñar</span>(<span class="cn">alumno</span>) {</div>
+          <div>&nbsp;&nbsp;<span class="ck">if</span> (<span class="cn">alumno</span>.<span class="cs">motivado</span>) {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="cn">alumno</span>.<span class="cs">aprende</span>([</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cv">"Lógica"</span>, <span class="cv">"Creatividad"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cv">"Resolución de Problemas"</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;])</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="cn">alumno</span>.<span class="cs">crea</span>([<span class="cv">"Juegos"</span>, <span class="cv">"Webs"</span>])</div>
+          <div>&nbsp;&nbsp;}</div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TESTIMONIOS -->
+<section id="testimonios">
+  <div class="container">
+    <div class="section-label">Lo que dicen</div>
+    <h2 class="section-h2">Las familias<br><em>hablan por nosotros</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Mi hijo de 10 años ya creó su primer juego en Roblox y se lo compartió a todos sus amigos. La emoción que tiene cada lunes esperando su clase es increíble."</div>
+        <div class="testi-author">
+          <div class="avatar" style="background:#2563af">MG</div>
+          <div><div class="testi-name">María González</div><div class="testi-role">Mamá de Sebastián, 10 años</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Lo mejor es que la clase es solo para mi hija. El instructor sabe exactamente dónde está y qué necesita. Totalmente diferente a cualquier otro curso que probamos."</div>
+        <div class="testi-author">
+          <div class="avatar" style="background:#7c6fff">CA</div>
+          <div><div class="testi-name">Carlos Arteaga</div><div class="testi-role">Papá de Valeria, 13 años</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Mi hija tomó el curso de Blender y ahora quiere estudiar diseño 3D. Las clases son súper dinámicas y el profesor es muy paciente con ella."</div>
+        <div class="testi-author">
+          <div class="avatar" style="background:#00d4aa;color:#0d0d1a">LR</div>
+          <div><div class="testi-name">Laura Rodríguez</div><div class="testi-role">Mamá de Isabela, 14 años</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PRECIOS -->
+<section id="precios">
+  <div class="container">
+    <div class="section-label">Precio</div>
+    <h2 class="section-h2">Simple y <em>transparente</em></h2>
+    <p class="section-sub">Un solo precio para todos los cursos. Sin sorpresas, sin cobros extra.</p>
+    <div class="precio-wrap">
+      <div class="precio-card reveal">
+        <div class="precio-label">Clase individual · 1 curso</div>
+        <div class="precio-amount">$180.000</div>
+        <div class="precio-period">COP / mes · 8 clases al mes</div>
+        <ul class="precio-list">
+          <li>2 clases en vivo por semana</li>
+          <li>Clase 100% individual</li>
+          <li>Instructor dedicado solo para tu hijo/a</li>
+          <li>Horario flexible a tu medida</li>
+          <li>Avance personalizado sin presión grupal</li>
+          <li>Cancela cuando quieras</li>
+        </ul>
+        <a href="https://wa.me/573507687220?text=Hola%20Frederick%2C%20quiero%20inscribir%20a%20mi%20hijo%2Fa" class="btn-primary" style="display:block;text-align:center">Inscribirse por WhatsApp →</a>
+      </div>
+      <div class="reveal">
+        <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:1rem;">Compara y elige la mejor opción</p>
+        <div class="tabla-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Característica</th>
+                <th>Kodland</th>
+                <th>Creativos</th>
+                <th>⚡ Prog&lt;Niños/&gt;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>💰 Precio / mes</td><td>$1.060.800+</td><td>$159.000</td><td>$180.000</td></tr>
+              <tr><td>📚 Clases / mes</td><td>4–8 grupo</td><td>4 grupo</td><td>8 individual</td></tr>
+              <tr><td>👨‍🏫 Modalidad</td><td>Grupal</td><td>Grupal</td><td>1 a 1</td></tr>
+              <tr><td>💵 Precio/clase</td><td>$33.000+</td><td>$39.750</td><td>$22.500 🔥</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="https://wa.me/573507687220?text=Hola%20Frederick%2C%20quiero%20mi%20clase%20gratis%20de%20Programaci%C3%B3n%20Para%20Ni%C3%B1os" class="btn-primary" style="display:inline-block;margin-top:1.5rem;">📲 Clase gratis por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="section-label">Contacto</div>
+    <h2 class="section-h2">¿Listo para<br><em>empezar?</em></h2>
+    <div class="contacto-grid">
+      <div class="contact-info reveal">
+        <p style="color:var(--text-muted);font-size:.95rem;line-height:1.7;margin-bottom:.5rem;">Escríbenos y te ayudamos a elegir el curso ideal según la edad e intereses de tu hijo/a.</p>
+        <div class="contact-item">
+          <div class="contact-icon">💬</div>
+          <div><div class="contact-label">WhatsApp</div><div class="contact-value">+57 350 768 7220</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div><div class="contact-label">Email</div><div class="contact-value">frederickcorredor@gmail.com</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div><div class="contact-label">Horarios</div><div class="contact-value">Lun–Vie: 3pm–8pm · Sáb: 9am–2pm</div></div>
+        </div>
+      </div>
+      <div class="form-card reveal">
+        <div class="form-row">
+          <div class="form-group"><label>Tu nombre</label><input type="text" id="f-nombre" placeholder="Ana García"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="ana@email.com"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Edad del niño/a</label><input type="number" id="f-edad" placeholder="12" min="8" max="18"></div>
+          <div class="form-group">
+            <label>Curso de interés</label>
+            <select id="f-curso">
+              <option value="">Selecciona un curso...</option>
+              <option>Desarrollo Web (HTML & CSS)</option>
+              <option>Programación en Roblox</option>
+              <option>Videojuegos con Godot</option>
+              <option>Personajes en Blender</option>
+              <option>Aún no sé, necesito orientación</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Mensaje (opcional)</label><textarea id="f-msg" placeholder="Cuéntanos un poco sobre tu hijo/a..."></textarea></div>
+        <button onclick="enviarWA()" class="btn-primary" style="width:100%;border:none;cursor:pointer;font-family:var(--font-display)">Enviar por WhatsApp →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">PROG&lt;NIÑOS/&gt;</div>
+  <div class="footer-copy">© 2026 Programación Para Niños · Frederick Corredor</div>
+  <div class="footer-links">
+    <a href="https://instagram.com">Instagram</a>
+    <a href="mailto:frederickcorredor@gmail.com">Email</a>
+    <a href="https://wa.me/573507687220">WhatsApp</a>
+  </div>
+</footer>
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   PLANET 3D SCENE
+═══════════════════════════════════════════ */
+const canvas = document.getElementById('hero-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+
+// Fog
+scene.fog = new THREE.FogExp2(0x0d0d1a, 0.045);
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
+camera.position.set(0, 5, 12);
+camera.lookAt(0, 0, 0);
+
+function resizeCanvas() {
+  const hero = document.getElementById('hero');
+  const w = hero.clientWidth, h = hero.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// ── LIGHTS ──────────────────────────────
+scene.add(new THREE.AmbientLight(0x8888bb, 0.8));
+const sun = new THREE.DirectionalLight(0xfff5e0, 1.4);
+sun.position.set(8, 12, 6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.far = 50;
+scene.add(sun);
+const fill = new THREE.DirectionalLight(0x4466ff, 0.3);
+fill.position.set(-8, 2, -6);
+scene.add(fill);
+
+// ── PLANET GROUP ──────────────────────────────
+const planetGroup = new THREE.Group();
+scene.add(planetGroup);
+
+// Planet sphere
+const planetMat = new THREE.MeshLambertMaterial({ color: 0x2d6a4f });
+const planet = new THREE.Mesh(new THREE.SphereGeometry(3, 64, 64), planetMat);
+planet.receiveShadow = true;
+planetGroup.add(planet);
+
+// Ocean cap
+const oceanMat = new THREE.MeshLambertMaterial({ color: 0x1a6fa8, transparent: true, opacity: 0.6 });
+const ocean = new THREE.Mesh(new THREE.SphereGeometry(3.01, 32, 32, 0, Math.PI*2, 0, 0.55), oceanMat);
+planetGroup.add(ocean);
+
+// Subtle grid
+const gridMat = new THREE.MeshBasicMaterial({ color: 0x1e7a52, wireframe: true, transparent: true, opacity: 0.08 });
+planetGroup.add(new THREE.Mesh(new THREE.SphereGeometry(3.02, 18, 18), gridMat));
+
+// ── TREES ──────────────────────────────
+function makeTree(phi, theta, s=1) {
+  const g = new THREE.Group();
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.035*s, 0.055*s, 0.28*s, 6),
+    new THREE.MeshLambertMaterial({color:0x7a4a1e})
+  );
+  trunk.position.y = 0.14*s; trunk.castShadow = true; g.add(trunk);
+  [0, 0.15, 0.28].forEach((dy, i) => {
+    const cone = new THREE.Mesh(
+      new THREE.ConeGeometry(0.18*s*(1-i*.12), 0.32*s, 7),
+      new THREE.MeshLambertMaterial({color: i===0?0x1a7a3a:0x236b30})
+    );
+    cone.position.y = (0.3+dy)*s; cone.castShadow = true; g.add(cone);
+  });
+  const pos = new THREE.Vector3().setFromSphericalCoords(3.03, phi, theta);
+  g.position.copy(pos);
+  g.lookAt(new THREE.Vector3(0,0,0)); g.rotateX(Math.PI/2);
+  planetGroup.add(g);
+}
+[[1.0,.4],[1.1,1.1],[0.85,2.0],[1.2,3.2],[1.05,4.3],[0.9,5.5],[1.3,0.6],[1.15,2.7],[0.95,3.8],[1.1,5.0]].forEach(([p,t]) => makeTree(p,t,0.85+Math.random()*.3));
+
+// ── COURSES ──────────────────────────────
+const COURSES = [
+  {
+    id:'web', emoji:'🌐', title:'Desarrollo Web',
+    meta:'📅 12 semanas · 10–18 años',
+    desc:'Diseña tu primera página web con HTML, CSS y JavaScript. Animaciones y tu estilo propio.',
+    tags:['HTML','CSS','JavaScript','12 semanas'],
+    color:0x4a90d9, roofColor:0x1a4a9a, angle:0,
+    wa:'Hola Frederick, quiero info sobre el curso de Desarrollo Web'
+  },
+  {
+    id:'roblox', emoji:'🎮', title:'Roblox Studio',
+    meta:'📅 16 semanas · 10–18 años',
+    desc:'Crea tus propios juegos en Roblox usando Lua. Mundos, personajes y mecánicas únicas.',
+    tags:['Lua','Roblox','Diseño de juegos','16 semanas'],
+    color:0xe05252, roofColor:0x8a1010, angle:Math.PI/2,
+    wa:'Hola Frederick, quiero info sobre el curso de Roblox Studio'
+  },
+  {
+    id:'godot', emoji:'⚙️', title:'Videojuegos Godot',
+    meta:'📅 20 semanas · 12–18 años',
+    desc:'Programa videojuegos 2D completos con Godot 4 y GDScript. Desde la idea hasta publicar.',
+    tags:['GDScript','Godot 4','2D','20 semanas'],
+    color:0x5ab86e, roofColor:0x0f5a20, angle:Math.PI,
+    wa:'Hola Frederick, quiero info sobre el curso de Godot'
+  },
+  {
+    id:'blender', emoji:'🧊', title:'Personajes Blender',
+    meta:'📅 16 semanas · 12–18 años',
+    desc:'Modela, riggea y anima tus propios personajes 3D. Crea los héroes de tus videojuegos.',
+    tags:['Blender','3D','Rigging','16 semanas'],
+    color:0xf5a623, roofColor:0x8a4a00, angle:Math.PI*1.5,
+    wa:'Hola Frederick, quiero info sobre el curso de Blender 3D'
+  }
+];
+
+// ── CSS2D RENDERER ──────────────────────────────
+// Manual CSS2D: create floating HTML labels
+const labelDivs = [];
+
+function createLabel(text) {
+  const div = document.createElement('div');
+  div.className = 'label3d';
+  div.textContent = text;
+  div.style.position = 'absolute';
+  div.style.display = 'none';
+  document.getElementById('hero').appendChild(div);
+  return div;
+}
+
+const buildingGroups = [];
+
+COURSES.forEach((c) => {
+  const phi = Math.PI / 2.3;
+  const pos = new THREE.Vector3().setFromSphericalCoords(3.0, phi, c.angle);
+  const g = new THREE.Group();
+  g.userData = { curso: c };
+
+  // Platform
+  const plat = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.5, 0.5, 0.07, 16),
+    new THREE.MeshLambertMaterial({color:0xc8b89a})
+  );
+  plat.receiveShadow = true; g.add(plat);
+
+  // Building body
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(0.6, 0.65, 0.6),
+    new THREE.MeshLambertMaterial({color:c.color})
+  );
+  body.position.y = 0.36; body.castShadow = true; body.receiveShadow = true; g.add(body);
+
+  // Roof
+  const roof = new THREE.Mesh(
+    new THREE.ConeGeometry(0.5, 0.4, 4),
+    new THREE.MeshLambertMaterial({color:c.roofColor})
+  );
+  roof.position.y = 0.865; roof.rotation.y = Math.PI/4; roof.castShadow = true; g.add(roof);
+
+  // Door
+  const door = new THREE.Mesh(
+    new THREE.BoxGeometry(0.13, 0.2, 0.025),
+    new THREE.MeshLambertMaterial({color:0xffffff})
+  );
+  door.position.set(0, 0.1, 0.31); g.add(door);
+
+  // Windows ×4
+  [[-0.16,0.38],[0.16,0.38],[-0.16,0.18],[0.16,0.18]].forEach(([x,y]) => {
+    const win = new THREE.Mesh(
+      new THREE.BoxGeometry(0.1,0.1,0.02),
+      new THREE.MeshLambertMaterial({color:0xfffbc8})
+    );
+    win.position.set(x,y,0.31); g.add(win);
+  });
+
+  // Sign board on front
+  const sign = new THREE.Mesh(
+    new THREE.BoxGeometry(0.38,0.14,0.02),
+    new THREE.MeshLambertMaterial({color:0xffffff})
+  );
+  sign.position.set(0,0.58,0.32); g.add(sign);
+
+  g.position.copy(pos);
+  g.lookAt(new THREE.Vector3(0,0,0).addScaledVector(pos.normalize(),-1));
+  g.rotateX(-Math.PI/2);
+
+  planetGroup.add(g);
+  buildingGroups.push(g);
+
+  // Floating label
+  const lbl = createLabel(c.emoji + ' ' + c.title);
+  lbl.dataset.idx = buildingGroups.length - 1;
+  labelDivs.push(lbl);
+});
+
+// ── NPC ──────────────────────────────
+const npcGroup = new THREE.Group();
+const npcMat = new THREE.MeshLambertMaterial({color:0xffd0a0});
+const npcDarkMat = new THREE.MeshLambertMaterial({color:0x2244aa});
+const npcHairMat = new THREE.MeshLambertMaterial({color:0x221100});
+const npcShirtMat = new THREE.MeshLambertMaterial({color:0x00d4aa});
+
+// Body
+const body2 = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,0.22,8), npcShirtMat);
+body2.position.y=0.11; npcGroup.add(body2);
+// Head
+const head = new THREE.Mesh(new THREE.SphereGeometry(0.1,10,10), npcMat);
+head.position.y=0.3; npcGroup.add(head);
+// Hair
+const hair = new THREE.Mesh(new THREE.SphereGeometry(0.1,10,8,0,Math.PI*2,0,Math.PI/2), npcHairMat);
+hair.position.y=0.32; npcGroup.add(hair);
+// Legs
+[-0.06,0.06].forEach(x => {
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.18,6), npcDarkMat);
+  leg.position.set(x,-0.09,0); npcGroup.add(leg);
+});
+// Backpack
+const pack = new THREE.Mesh(new THREE.BoxGeometry(0.12,0.16,0.08), new THREE.MeshLambertMaterial({color:0xf5a623}));
+pack.position.set(0,0.15,-0.1); npcGroup.add(pack);
+
+npcGroup.scale.setScalar(0.75);
+planetGroup.add(npcGroup);
+
+let npcAngle = 0;
+
+// ── CLOUDS ──────────────────────────────
+const cloudGroup = new THREE.Group();
+scene.add(cloudGroup);
+const cloudMat = new THREE.MeshLambertMaterial({color:0xffffff, transparent:true, opacity:0.7});
+
+function makeCloud(x,y,z,s=1) {
+  const g = new THREE.Group();
+  [[0,0,0,1],[0.3,0.1,0,.7],[-.28,0.05,0,.65],[0.05,.15,0,.55]].forEach(([cx,cy,cz,r]) => {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(r*0.3*s,8,8), cloudMat);
+    m.position.set(cx*s,cy*s,cz*s); g.add(m);
+  });
+  g.position.set(x,y,z);
+  cloudGroup.add(g);
+  return g;
+}
+
+const clouds = [
+  makeCloud(6,5,2,1.2), makeCloud(-7,4,3,1.0), makeCloud(4,6,-5,0.9),
+  makeCloud(-5,3,-4,1.1), makeCloud(8,2,-2,0.85)
+];
+
+// ── STARS ──────────────────────────────
+const starsGeo = new THREE.BufferGeometry();
+const sv = [];
+for (let i=0;i<800;i++) {
+  const v = new THREE.Vector3((Math.random()-.5)*100,(Math.random()-.5)*100,(Math.random()-.5)*100);
+  if (v.length()>18) sv.push(v.x,v.y,v.z);
+}
+starsGeo.setAttribute('position', new THREE.Float32BufferAttribute(sv,3));
+scene.add(new THREE.Points(starsGeo, new THREE.PointsMaterial({color:0xffffff,size:0.12})));
+
+// ── RAYCASTER / INTERACTION ──────────────────────────────
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(-9,-9);
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX-r.left)/r.width)*2-1;
+  mouse.y = -((e.clientY-r.top)/r.height)*2+1;
+});
+canvas.addEventListener('touchmove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = ((e.touches[0].clientX-r.left)/r.width)*2-1;
+  mouse.y = -((e.touches[0].clientY-r.top)/r.height)*2+1;
+}, {passive:true});
+
+// Course panel
+const panel = document.getElementById('course-panel');
+document.getElementById('panel-close').addEventListener('click', () => {
+  panel.classList.remove('open');
+  currentOpen = null;
+});
+let currentOpen = null;
+
+function openPanel(c) {
+  document.getElementById('p-emoji').textContent = c.emoji;
+  document.getElementById('p-title').textContent = c.title;
+  document.getElementById('p-meta').textContent = c.meta;
+  document.getElementById('p-desc').textContent = c.desc;
+  const tagsEl = document.getElementById('p-tags');
+  tagsEl.innerHTML = c.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('p-wa').href = `https://wa.me/573507687220?text=${encodeURIComponent(c.wa)}`;
+  panel.classList.add('open');
+  currentOpen = c;
+}
+
+canvas.addEventListener('click', e => {
+  const r = canvas.getBoundingClientRect();
+  const m = new THREE.Vector2(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
+  raycaster.setFromCamera(m, camera);
+  const hits = raycaster.intersectObjects(buildingGroups, true);
+  if (hits.length) {
+    let obj = hits[0].object;
+    while (obj.parent && !obj.userData.curso) obj = obj.parent;
+    if (obj.userData.curso) openPanel(obj.userData.curso);
+  }
+});
+canvas.addEventListener('touchend', e => {
+  if (isDragging) return;
+  const t = e.changedTouches[0];
+  const r = canvas.getBoundingClientRect();
+  const m = new THREE.Vector2(((t.clientX-r.left)/r.width)*2-1, -((t.clientY-r.top)/r.height)*2+1);
+  raycaster.setFromCamera(m, camera);
+  const hits = raycaster.intersectObjects(buildingGroups, true);
+  if (hits.length) {
+    let obj = hits[0].object;
+    while (obj.parent && !obj.userData.curso) obj = obj.parent;
+    if (obj.userData.curso) openPanel(obj.userData.curso);
+  }
+});
+
+// ── ORBIT DRAG ──────────────────────────────
+let isDragging=false, lastX=0, lastY=0, rotY=0, rotX=0.15, autoRotate=true;
+canvas.addEventListener('mousedown', e=>{isDragging=true;lastX=e.clientX;lastY=e.clientY;autoRotate=false;});
+canvas.addEventListener('touchstart', e=>{isDragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;autoRotate=false;},{passive:true});
+window.addEventListener('mouseup', ()=>isDragging=false);
+window.addEventListener('touchend', ()=>{isDragging=false;});
+window.addEventListener('mousemove', e=>{
+  if(!isDragging)return;
+  const dx=e.clientX-lastX, dy=e.clientY-lastY;
+  rotY+=dx*.007; rotX+=dy*.005;
+  rotX=Math.max(-.5,Math.min(.75,rotX));
+  lastX=e.clientX;lastY=e.clientY;
+});
+window.addEventListener('touchmove', e=>{
+  if(!isDragging)return;
+  const dx=e.touches[0].clientX-lastX, dy=e.touches[0].clientY-lastY;
+  rotY+=dx*.007; rotX+=dy*.005;
+  rotX=Math.max(-.5,Math.min(.75,rotX));
+  lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
+},{passive:true});
+
+// ── LABEL UPDATE ──────────────────────────────
+const heroEl = document.getElementById('hero');
+const projVector = new THREE.Vector3();
+
+function updateLabels() {
+  const w = heroEl.clientWidth, h = heroEl.clientHeight;
+  raycaster.setFromCamera(mouse, camera);
+
+  buildingGroups.forEach((g, i) => {
+    // World pos of building top
+    const worldPos = new THREE.Vector3();
+    g.getWorldPosition(worldPos);
+    // Offset slightly outward (above building in local space)
+    const outDir = worldPos.clone().normalize();
+    const labelPos = worldPos.clone().add(outDir.multiplyScalar(0.9));
+
+    projVector.copy(labelPos).project(camera);
+    const sx = (projVector.x * .5 + .5) * w;
+    const sy = (-.5 * projVector.y + .5) * h;
+
+    const div = labelDivs[i];
+    // Only show if in front of camera and near top of screen
+    if (projVector.z < 1 && projVector.z > -1) {
+      div.style.display = 'block';
+      div.style.left = sx + 'px';
+      div.style.top = (sy - 14) + 'px';
+    } else {
+      div.style.display = 'none';
+    }
+  });
+}
+
+// ── CURSOR ──────────────────────────────
+canvas.addEventListener('mousemove', e => {
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(buildingGroups, true);
+  canvas.style.cursor = hits.length ? 'pointer' : (isDragging ? 'grabbing' : 'grab');
+});
+
+// ── ANIMATE ──────────────────────────────
+let t=0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.016;
+
+  // Auto-rotate
+  if (autoRotate) rotY += 0.003;
+
+  planetGroup.rotation.y = rotY;
+  planetGroup.rotation.x = rotX;
+
+  // NPC walk
+  npcAngle += 0.008;
+  const npcPhi = Math.PI / 2.1;
+  const npcPos = new THREE.Vector3().setFromSphericalCoords(3.05, npcPhi, npcAngle);
+  npcGroup.position.copy(npcPos);
+  npcGroup.lookAt(new THREE.Vector3(0,0,0).addScaledVector(npcPos.normalize(),-1));
+  npcGroup.rotateX(-Math.PI/2);
+  // Walk bob
+  npcGroup.children[0].position.y = 0.11 + Math.sin(t*8)*0.02;
+  npcGroup.children[1].position.y = 0.3 + Math.sin(t*8)*0.02;
+  npcGroup.children[2].position.y = 0.32 + Math.sin(t*8)*0.02;
+  // Legs swing
+  if (npcGroup.children[3]) npcGroup.children[3].rotation.x = Math.sin(t*8)*0.4;
+  if (npcGroup.children[4]) npcGroup.children[4].rotation.x = -Math.sin(t*8)*0.4;
+
+  // Building hover glow
+  raycaster.setFromCamera(mouse, camera);
+  const hoverHits = raycaster.intersectObjects(buildingGroups, true);
+  buildingGroups.forEach(g => {
+    g.children.forEach(ch => {
+      if (ch.material) {
+        ch.material.emissive = new THREE.Color(0x000000);
+        ch.material.emissiveIntensity = 0;
+      }
+    });
+  });
+  if (hoverHits.length) {
+    let obj = hoverHits[0].object;
+    while (obj.parent && !obj.userData.curso) obj = obj.parent;
+    if (obj.userData.curso) {
+      obj.children.forEach(ch => {
+        if (ch.material) {
+          ch.material.emissive = new THREE.Color(0xffffff);
+          ch.material.emissiveIntensity = 0.15;
+        }
+      });
+    }
+  }
+
+  // Clouds drift
+  clouds.forEach((cl, i) => {
+    cl.rotation.y += 0.001*(i%2===0?1:-1);
+    cl.position.x = Math.sin(t*0.05+i)*0.5 + cl.position.x*.999;
+  });
+
+  updateLabels();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ── REVEAL ON SCROLL ──────────────────────────────
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:0.15});
+reveals.forEach(r => io.observe(r));
+
+// ── FORM → WHATSAPP ──────────────────────────────
+function enviarWA() {
+  const n = document.getElementById('f-nombre').value;
+  const email = document.getElementById('f-email').value;
+  const edad = document.getElementById('f-edad').value;
+  const curso = document.getElementById('f-curso').value;
+  const msg = document.getElementById('f-msg').value;
+  const txt = `Hola Frederick! 👋\n\nNombre: ${n||'(no indicado)'}\nEmail: ${email||'(no indicado)'}\nEdad del niño/a: ${edad||'(no indicado)'}\nCurso de interés: ${curso||'(no indicado)'}\n${msg?`\nMensaje: ${msg}`:''}`;
+  window.open(`https://wa.me/573507687220?text=${encodeURIComponent(txt)}`, '_blank');
+}
+
+// ── HINT FADE ──────────────────────────────
+setTimeout(() => { document.querySelector('.hero-hint').style.opacity='0.6'; }, 1500);
+window.addEventListener('scroll', () => { if(window.scrollY>80) document.querySelector('.hero-hint').style.opacity='0'; });
+</script>
+</body>
+</html>
