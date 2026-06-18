@@ -31,6 +31,10 @@
     --radius-lg: 20px;
   }
 
+  html {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
   body {
     background: var(--bg0);
     color: var(--text);
@@ -38,6 +42,7 @@
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
+    max-width: 100%;
   }
 
   /* ── NAV ─────────────────────────────────── */
@@ -173,8 +178,8 @@
   .panel-wa:hover { opacity: .9; }
 
   /* ── SECTIONS ─────────────────────────────────── */
-  section { padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 5vw, 3rem); }
-  .container { max-width: 1100px; margin: 0 auto; }
+  section { padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 5vw, 3rem); width: 100%; }
+  .container { max-width: 1100px; margin: 0 auto; width: 100%; }
   .section-label {
     font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
     color: var(--accent); margin-bottom: .75rem;
@@ -338,17 +343,30 @@
   .precio-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.75rem; }
   .precio-list li { display: flex; gap: .6rem; font-size: .9rem; color: var(--text-muted); align-items: flex-start; }
   .precio-list li::before { content: "✓"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
-  .tabla-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  .tabla-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 0; }
   thead th {
-    background: var(--bg3); padding: .75rem 1rem; text-align: left;
-    color: var(--text-muted); font-weight: 600; font-size: .75rem;
+    background: var(--bg3); padding: .65rem .75rem; text-align: left;
+    color: var(--text-muted); font-weight: 600; font-size: .72rem; white-space: nowrap;
   }
   thead th:first-child { border-radius: 8px 0 0 0; }
   thead th:last-child { border-radius: 0 8px 0 0; background: rgba(0,212,170,.12); color: var(--accent); }
-  tbody td { padding: .7rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  tbody td { padding: .6rem .75rem; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: .82rem; }
   tbody td:last-child { color: var(--accent); font-weight: 600; }
+  tbody td:first-child { white-space: nowrap; }
   tbody tr:last-child td { border-bottom: none; }
+
+  /* Mobile: tabla más compacta */
+  @media (max-width: 500px) {
+    thead th { padding: .55rem .6rem; font-size: .68rem; }
+    tbody td { padding: .55rem .6rem; font-size: .78rem; }
+  }
 
   /* ── CONTACTO ─────────────────────────────────── */
   #contacto { background: var(--bg0); }
