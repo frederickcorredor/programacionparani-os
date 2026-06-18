@@ -364,8 +364,9 @@
 
   /* Mobile: tabla más compacta */
   @media (max-width: 500px) {
-    thead th { padding: .55rem .6rem; font-size: .68rem; }
-    tbody td { padding: .55rem .6rem; font-size: .78rem; }
+    thead th { padding: .45rem .5rem; font-size: .62rem; }
+    tbody td { padding: .45rem .5rem; font-size: .72rem; }
+    .tabla-wrap { font-size: .72rem; }
   }
 
   /* ── CONTACTO ─────────────────────────────────── */
@@ -787,6 +788,10 @@ function resizeCanvas() {
   const w = hero.clientWidth, h = hero.clientHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
+  // En móvil alejamos la cámara → planeta se ve más pequeño
+  const isMobile = w < 600;
+  camera.position.set(0, isMobile ? 6 : 5, isMobile ? 17 : 12);
+  camera.lookAt(0, 0, 0);
   camera.updateProjectionMatrix();
 }
 resizeCanvas();
