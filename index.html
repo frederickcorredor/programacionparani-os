@@ -87,6 +87,7 @@
     position: relative; z-index: 2;
     text-align: center; pointer-events: none;
     padding: 0 1rem;
+    top: 28vh;
   }
   .hero-badge {
     display: inline-block; background: rgba(0,212,170,.15);
@@ -121,10 +122,10 @@
   .btn-ghost:hover { border-color: rgba(255,255,255,.25); color: #fff; }
 
   .hero-hint {
-    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    z-index: 2; font-size: 0.75rem; color: var(--text-muted);
+    position: absolute; top: 6rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; font-size: 0.75rem; color: white;
     display: flex; flex-direction: column; align-items: center; gap: 6px;
-    animation: bounce 2s infinite;
+    animation: bounce 2s infinite;text-align: center;
   }
   .hero-hint svg { width: 20px; height: 20px; }
   @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
@@ -247,10 +248,10 @@
     transition: transform .3s;
   }
   .curso-card:hover .curso-thumb { transform: scale(1.06); }
-  .curso-thumb[data-color="blue"] { background: linear-gradient(135deg, #1a2a4a, #1e3a6e); }
-  .curso-thumb[data-color="red"]  { background: linear-gradient(135deg, #2a1a1a, #4a1010); }
-  .curso-thumb[data-color="green"]{ background: linear-gradient(135deg, #1a2a1a, #0f3a20); }
-  .curso-thumb[data-color="amber"]{ background: linear-gradient(135deg, #2a2010, #3a2a00); }
+  .curso-thumb[data-color="blue"] { background-image: url(webs.webp);background-size: cover;background-position: center; }
+  .curso-thumb[data-color="red"]  { background-image: url(roblox.webp);background-size: cover;background-position: center; }
+  .curso-thumb[data-color="green"]{ background-image: url(godot.webp);background-size: cover;background-position: center; }
+  .curso-thumb[data-color="amber"]{ background-image: url(blender.webp);background-size: cover;background-position: center; }
   .curso-body { padding: 1.25rem; }
   .curso-ages {
     font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -301,7 +302,7 @@
   }
   .dot { width: 10px; height: 10px; border-radius: 50%; }
   .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
-  .code-body { padding: 1.25rem 1.5rem; font-family: monospace; font-size: .85rem; line-height: 1.9; }
+  .code-body { padding: 1.25rem 1.5rem; font-family: monospace; font-size: .85rem; line-height: 1.9; background-image: url(fredceleste.webp);background-repeat: no-repeat; background-position: 180px bottom;background-size: 60%;}
   .ck { color: #7c6fff; } .cs { color: #00d4aa; } .cv { color: #ff9f7f; }
   .cn { color: #e8e8f0; } .cc { color: #606080; }
 
@@ -572,7 +573,7 @@
     <div class="cursos-grid">
 
       <div class="curso-card reveal" data-color="blue">
-        <div class="curso-thumb" data-color="blue">🌐</div>
+        <div class="curso-thumb" data-color="blue"></div>
         <div class="curso-body">
           <div class="curso-ages">10–18 años</div>
           <div class="curso-title">HTML & CSS Creativo</div>
@@ -582,7 +583,7 @@
       </div>
 
       <div class="curso-card reveal" data-color="red">
-        <div class="curso-thumb" data-color="red">🟥</div>
+        <div class="curso-thumb" data-color="red"></div>
         <div class="curso-body">
           <div class="curso-ages">10–18 años</div>
           <div class="curso-title">Programación en Roblox</div>
@@ -592,7 +593,7 @@
       </div>
 
       <div class="curso-card reveal" data-color="green">
-        <div class="curso-thumb" data-color="green">🎮</div>
+        <div class="curso-thumb" data-color="green"></div>
         <div class="curso-body">
           <div class="curso-ages">12–18 años</div>
           <div class="curso-title">Videojuegos con Godot</div>
@@ -602,7 +603,7 @@
       </div>
 
       <div class="curso-card reveal" data-color="amber">
-        <div class="curso-thumb" data-color="amber">🧊</div>
+        <div class="curso-thumb" data-color="amber"></div>
         <div class="curso-body">
           <div class="curso-ages">12–18 años</div>
           <div class="curso-title">Personajes en Blender</div>
@@ -670,7 +671,7 @@
   <div class="code-particles" data-particles></div>
   <div class="container">
     <div class="section-label">Lo que dicen</div>
-    <h2 class="section-h2">Las familias<br><em>hablan por nosotros</em></h2>
+    <h2 class="section-h2">Los Padres<br><em>Opinan del programa</em></h2>
     <div class="testi-grid">
       <div class="testi-card reveal">
         <div class="stars">★★★★★</div>
@@ -682,7 +683,7 @@
       </div>
       <div class="testi-card reveal">
         <div class="stars">★★★★★</div>
-        <div class="testi-text">"Lo mejor es que la clase es solo para mi hija. El instructor sabe exactamente dónde está y qué necesita. Totalmente diferente a cualquier otro curso que probamos."</div>
+        <div class="testi-text">"Lo mejor es que la clase es solo para mi hija. El profe Frederick sabe exactamente dónde está y qué necesita. Totalmente diferente a cualquier otro curso que probamos."</div>
         <div class="testi-author">
           <div class="avatar" style="background:#7c6fff">CA</div>
           <div><div class="testi-name">Carlos Arteaga</div><div class="testi-role">Papá de Valeria, 13 años</div></div>
