@@ -178,7 +178,7 @@
   .panel-wa:hover { opacity: .9; }
 
   /* ── SECTIONS ─────────────────────────────────── */
-  section { padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 5vw, 3rem); width: 100%; }
+  section { padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 5vw, 3rem); width: 100%; position: relative; overflow: hidden; }
   .container { max-width: 1100px; margin: 0 auto; width: 100%; }
   .section-label {
     font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
@@ -194,7 +194,7 @@
   hr.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
   /* ── PROBLEMA / SOLUCION ─────────────────────────────────── */
-  #problema { background: var(--bg1); }
+  #problema { background: radial-gradient(ellipse 80% 60% at 20% 0%, rgba(124,111,255,.07), transparent 60%), var(--bg1); }
   .prob-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
     margin-top: 3rem;
@@ -225,7 +225,7 @@
   .sol-text-desc { font-size: .85rem; color: var(--text-muted); }
 
   /* ── CURSOS ─────────────────────────────────── */
-  #cursos { background: var(--bg0); }
+  #cursos { background: radial-gradient(ellipse 70% 50% at 80% 10%, rgba(0,212,170,.06), transparent 60%), var(--bg0); }
   .cursos-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.5rem; margin-top: 3rem;
@@ -233,18 +233,20 @@
   .curso-card {
     background: var(--bg1); border: 1px solid var(--border);
     border-radius: var(--radius-lg); overflow: hidden;
-    transition: transform .2s, border-color .2s;
+    transition: transform .25s, border-color .25s, box-shadow .25s;
     cursor: pointer;
   }
-  .curso-card:hover { transform: translateY(-4px); }
-  .curso-card[data-color="blue"]:hover { border-color: rgba(74,144,217,.5); }
-  .curso-card[data-color="red"]:hover { border-color: rgba(224,82,82,.5); }
-  .curso-card[data-color="green"]:hover { border-color: rgba(91,184,110,.5); }
-  .curso-card[data-color="amber"]:hover { border-color: rgba(245,166,35,.5); }
+  .curso-card:hover { transform: translateY(-6px); }
+  .curso-card[data-color="blue"]:hover { border-color: rgba(74,144,217,.5); box-shadow: 0 16px 40px rgba(74,144,217,.18); }
+  .curso-card[data-color="red"]:hover { border-color: rgba(224,82,82,.5); box-shadow: 0 16px 40px rgba(224,82,82,.18); }
+  .curso-card[data-color="green"]:hover { border-color: rgba(91,184,110,.5); box-shadow: 0 16px 40px rgba(91,184,110,.18); }
+  .curso-card[data-color="amber"]:hover { border-color: rgba(245,166,35,.5); box-shadow: 0 16px 40px rgba(245,166,35,.18); }
   .curso-thumb {
     height: 160px; display: flex; align-items: center; justify-content: center;
     font-size: 3.5rem; position: relative; overflow: hidden;
+    transition: transform .3s;
   }
+  .curso-card:hover .curso-thumb { transform: scale(1.06); }
   .curso-thumb[data-color="blue"] { background: linear-gradient(135deg, #1a2a4a, #1e3a6e); }
   .curso-thumb[data-color="red"]  { background: linear-gradient(135deg, #2a1a1a, #4a1010); }
   .curso-thumb[data-color="green"]{ background: linear-gradient(135deg, #1a2a1a, #0f3a20); }
@@ -263,7 +265,7 @@
   }
 
   /* ── NOSOTROS ─────────────────────────────────── */
-  #nosotros { background: var(--bg1); }
+  #nosotros { background: radial-gradient(ellipse 70% 60% at 15% 100%, rgba(0,212,170,.06), transparent 60%), var(--bg1); }
   .nosotros-grid {
     display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; align-items: center;
     margin-top: 3rem;
@@ -273,7 +275,9 @@
   .stat-card {
     background: var(--bg2); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 1rem 1.25rem;
+    transition: border-color .25s, box-shadow .25s;
   }
+  .stat-card:hover { border-color: rgba(0,212,170,.3); box-shadow: 0 8px 24px rgba(0,212,170,.1); }
   .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--accent); }
   .stat-label { font-size: .8rem; color: var(--text-muted); margin-top: .1rem; }
   .features-list { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
@@ -302,7 +306,7 @@
   .cn { color: #e8e8f0; } .cc { color: #606080; }
 
   /* ── TESTIMONIOS ─────────────────────────────────── */
-  #testimonios { background: var(--bg0); }
+  #testimonios { background: radial-gradient(ellipse 80% 50% at 85% 0%, rgba(124,111,255,.06), transparent 60%), var(--bg0); }
   .testi-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem; margin-top: 3rem;
@@ -323,7 +327,7 @@
   .testi-role { font-size: .75rem; color: var(--text-muted); }
 
   /* ── PRECIOS ─────────────────────────────────── */
-  #precios { background: var(--bg1); }
+  #precios { background: radial-gradient(ellipse 70% 60% at 25% 20%, rgba(0,212,170,.08), transparent 60%), var(--bg1); }
   .precio-wrap {
     display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
     margin-top: 3rem; align-items: start;
@@ -370,7 +374,7 @@
   }
 
   /* ── CONTACTO ─────────────────────────────────── */
-  #contacto { background: var(--bg0); }
+  #contacto { background: radial-gradient(ellipse 80% 60% at 75% 100%, rgba(124,111,255,.06), transparent 60%), var(--bg0); }
   .contacto-grid {
     display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem;
     margin-top: 3rem; align-items: start;
@@ -421,6 +425,45 @@
   /* ── SCROLL ANIMATIONS ─────────────────────────────────── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s; }
   .reveal.in { opacity: 1; transform: none; }
+
+  /* ── CODE PARTICLES ─────────────────────────────────── */
+  .code-particles {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    z-index: 0;
+  }
+  .code-particle {
+    position: absolute; font-family: monospace; font-weight: 700;
+    color: var(--accent); opacity: 0; user-select: none;
+    animation: floatParticle linear infinite;
+  }
+  @keyframes floatParticle {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: var(--p-opacity, 0.12); }
+    90%  { opacity: var(--p-opacity, 0.12); }
+    100% { transform: translateY(-120px) rotate(var(--p-rot, 15deg)); opacity: 0; }
+  }
+  section { position: relative; }
+  section > .code-particles { z-index: 0; }
+  section > .container { position: relative; z-index: 1; }
+
+  /* ── FLOATING WHATSAPP BUTTON ─────────────────────────────────── */
+  #wa-float {
+    position: fixed; bottom: 22px; right: 22px; z-index: 200;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25d366; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 24px rgba(37,211,102,.45);
+    text-decoration: none; color: #fff;
+    animation: wa-pulse 2.4s ease-in-out infinite;
+    transition: transform .2s;
+  }
+  #wa-float:hover { transform: scale(1.08); }
+  @keyframes wa-pulse {
+    0%, 100% { box-shadow: 0 6px 24px rgba(37,211,102,.45); }
+    50% { box-shadow: 0 6px 24px rgba(37,211,102,.45), 0 0 0 10px rgba(37,211,102,.12); }
+  }
+  @media (max-width: 600px) {
+    #wa-float { width: 50px; height: 50px; bottom: 16px; right: 16px; }
+  }
 
   /* ── SCROLLBAR ─────────────────────────────────── */
   ::-webkit-scrollbar { width: 6px; }
@@ -480,6 +523,7 @@
 
 <!-- EL PROBLEMA -->
 <section id="problema">
+  <div class="code-particles" data-particles></div>
   <div class="container">
     <div class="section-label">El problema</div>
     <h2 class="section-h2">No es solo tiempo de pantalla,<br><em>es lo que hacen con él</em></h2>
@@ -520,6 +564,7 @@
 
 <!-- CURSOS -->
 <section id="cursos">
+  <div class="code-particles" data-particles></div>
   <div class="container">
     <div class="section-label">Elige tu aventura</div>
     <h2 class="section-h2">Cuatro mundos,<br><em>un solo objetivo</em></h2>
@@ -574,15 +619,16 @@
 
 <!-- NOSOTROS -->
 <section id="nosotros">
+  <div class="code-particles" data-particles></div>
   <div class="container">
     <div class="section-label">Por qué elegirnos</div>
     <h2 class="section-h2">Enseñamos creando,<br><em>no memorizando</em></h2>
     <div class="nosotros-grid">
       <div class="reveal">
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-num">+100</div><div class="stat-label">Estudiantes formados</div></div>
-          <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">Años de experiencia</div></div>
-          <div class="stat-card"><div class="stat-num">2×</div><div class="stat-label">Clases por semana</div></div>
+          <div class="stat-card"><div class="stat-num" data-count="100" data-prefix="+">0</div><div class="stat-label">Estudiantes formados</div></div>
+          <div class="stat-card"><div class="stat-num" data-count="10" data-suffix="+">0</div><div class="stat-label">Años de experiencia</div></div>
+          <div class="stat-card"><div class="stat-num" data-count="2" data-suffix="×">0</div><div class="stat-label">Clases por semana</div></div>
           <div class="stat-card"><div class="stat-num">1:1</div><div class="stat-label">Clases individuales</div></div>
         </div>
         <ul class="features-list">
@@ -621,6 +667,7 @@
 
 <!-- TESTIMONIOS -->
 <section id="testimonios">
+  <div class="code-particles" data-particles></div>
   <div class="container">
     <div class="section-label">Lo que dicen</div>
     <h2 class="section-h2">Las familias<br><em>hablan por nosotros</em></h2>
@@ -657,6 +704,7 @@
 
 <!-- PRECIOS -->
 <section id="precios">
+  <div class="code-particles" data-particles></div>
   <div class="container">
     <div class="section-label">Precio</div>
     <h2 class="section-h2">Simple y <em>transparente</em></h2>
@@ -750,6 +798,11 @@
     </div>
   </div>
 </section>
+
+<!-- FLOATING WHATSAPP BUTTON -->
+<a id="wa-float" href="https://wa.me/573507687220?text=Hola%20Frederick%2C%20quiero%20info%20sobre%20las%20clases" target="_blank" aria-label="WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.543 4.072 1.494 5.786L.057 23.535a.5.5 0 00.609.609l5.749-1.437A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.97 9.97 0 01-5.04-1.364l-.36-.214-3.737.934.951-3.641-.235-.374A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
 
 <!-- FOOTER -->
 <footer>
@@ -1225,6 +1278,49 @@ function enviarWA() {
   const txt = `Hola Frederick! 👋\n\nNombre: ${n||'(no indicado)'}\nEmail: ${email||'(no indicado)'}\nEdad del niño/a: ${edad||'(no indicado)'}\nCurso de interés: ${curso||'(no indicado)'}\n${msg?`\nMensaje: ${msg}`:''}`;
   window.open(`https://wa.me/573507687220?text=${encodeURIComponent(txt)}`, '_blank');
 }
+
+// ── ANIMATED COUNTERS ──────────────────────────────
+function animateCounter(el) {
+  const target = parseInt(el.dataset.count, 10);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const duration = 1400;
+  const start = performance.now();
+  function tick(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(eased * target);
+    el.textContent = prefix + val + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const counterEls = document.querySelectorAll('.stat-num[data-count]');
+const counterIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { animateCounter(e.target); counterIO.unobserve(e.target); }
+  });
+}, {threshold: 0.5});
+counterEls.forEach(el => counterIO.observe(el));
+
+// ── CODE PARTICLES ──────────────────────────────
+const PARTICLE_SYMBOLS = ['{ }', '</>', '( )', '[ ]', ';', '=>', '#', '0 1'];
+document.querySelectorAll('[data-particles]').forEach(container => {
+  const count = window.innerWidth < 600 ? 5 : 9;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'code-particle';
+    el.textContent = PARTICLE_SYMBOLS[Math.floor(Math.random()*PARTICLE_SYMBOLS.length)];
+    el.style.left = (Math.random()*94 + 2) + '%';
+    el.style.top = (Math.random()*90 + 5) + '%';
+    el.style.fontSize = (Math.random()*10 + 14) + 'px';
+    el.style.setProperty('--p-opacity', (Math.random()*0.1 + 0.06).toFixed(2));
+    el.style.setProperty('--p-rot', (Math.random()*30 - 15) + 'deg');
+    el.style.animationDuration = (Math.random()*10 + 14) + 's';
+    el.style.animationDelay = (-Math.random()*20) + 's';
+    container.appendChild(el);
+  }
+});
 
 // ── HINT FADE ──────────────────────────────
 setTimeout(() => { document.querySelector('.hero-hint').style.opacity='0.6'; }, 1500);
