@@ -370,7 +370,12 @@
   .vc-nav.prev { left: -8px; }
   .vc-nav.next { right: -8px; }
   .vc-nav svg { width: 18px; height: 18px; }
-  @media (max-width: 700px) { .vc-nav { display: none; } }
+  @media (max-width: 700px) {
+    .vc-nav { width: 36px; height: 36px; opacity: .92; }
+    .vc-nav svg { width: 16px; height: 16px; }
+    .vc-nav.prev { left: 0; }
+    .vc-nav.next { right: 0; }
+  }
   .vc-dots { display: flex; gap: .4rem; justify-content: center; margin-top: .25rem; }
   .vc-dot {
     width: 7px; height: 7px; border-radius: 50%; background: var(--border);
