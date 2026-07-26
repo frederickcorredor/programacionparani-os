@@ -1437,7 +1437,7 @@ const testimoniosVideos = [
     slide.innerHTML = `
       <div class="vc-video-wrap">
         <div class="stars">${item.stars || '★★★★★'}</div>
-        <video class="vc-video" preload="none" playsinline poster="${item.poster || ''}">
+        <video class="vc-video" preload="none" playsinline poster="${item.poster || ''}" controls>
           <source src="${item.src}" type="video/mp4">
         </video>
         <button class="vc-play-btn" type="button" aria-label="Reproducir testimonio de ${item.name}">${playIconSVG}</button>
