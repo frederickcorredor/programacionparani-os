@@ -308,24 +308,82 @@
 
   /* ── TESTIMONIOS ─────────────────────────────────── */
   #testimonios { background: radial-gradient(ellipse 80% 50% at 85% 0%, rgba(124,111,255,.06), transparent 60%), var(--bg0); }
-  .testi-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem; margin-top: 3rem;
-  }
-  .testi-card {
-    background: var(--bg1); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 1.5rem;
-  }
-  .stars { color: var(--accent); font-size: .9rem; margin-bottom: 1rem; }
-  .testi-text { font-size: .9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
   .testi-author { display: flex; align-items: center; gap: .75rem; }
   .avatar {
     width: 38px; height: 38px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: .8rem; font-weight: 700; color: #fff;
+    font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0;
   }
   .testi-name { font-size: .9rem; font-weight: 600; color: #fff; }
   .testi-role { font-size: .75rem; color: var(--text-muted); }
+
+  /* ── CARRUSEL DE TESTIMONIOS EN VIDEO ─────────────────────────────────── */
+  .vc-wrap { position: relative; margin-top: 3rem; }
+  .vc-viewport {
+    display: flex; gap: 1.25rem;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: .25rem .25rem 1.25rem;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .vc-viewport::-webkit-scrollbar { display: none; height: 0; }
+  .vc-viewport.jumping { scroll-behavior: auto; }
+  .vc-slide {
+    flex: 0 0 auto;
+    width: min(300px, 78vw);
+    scroll-snap-align: center;
+    display: flex; flex-direction: column;
+  }
+  .vc-video-wrap {
+    position: relative; width: 100%; aspect-ratio: 9 / 16;
+    border-radius: var(--radius-lg); overflow: hidden;
+    background: var(--bg2); border: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  .vc-video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+  .vc-video-wrap .stars {
+    position: absolute; top: .8rem; left: .9rem; z-index: 2;
+    color: var(--accent); font-size: .85rem;
+    text-shadow: 0 1px 6px rgba(0,0,0,.7); transition: opacity .2s;
+  }
+  .vc-video-wrap.playing .stars { opacity: 0; }
+  .vc-play-btn {
+    position: absolute; inset: 0; margin: auto; width: 58px; height: 58px;
+    border-radius: 50%; background: rgba(13,13,26,.55); backdrop-filter: blur(4px);
+    border: 1.5px solid rgba(255,255,255,.5); color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+    transition: transform .18s, background .18s, opacity .2s; z-index: 2;
+  }
+  .vc-play-btn:hover { transform: scale(1.08); background: rgba(0,212,170,.35); border-color: var(--accent); }
+  .vc-play-btn svg { width: 22px; height: 22px; margin-left: 3px; }
+  .vc-video-wrap.playing .vc-play-btn { opacity: 0; pointer-events: none; }
+  .vc-nav {
+    position: absolute; top: calc(50% - 1.25rem); transform: translateY(-50%);
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    z-index: 5; transition: background .2s, border-color .2s;
+  }
+  .vc-nav:hover { background: var(--bg3); border-color: rgba(255,255,255,.25); }
+  .vc-nav.prev { left: -8px; }
+  .vc-nav.next { right: -8px; }
+  .vc-nav svg { width: 18px; height: 18px; }
+  @media (max-width: 700px) {
+    .vc-play-btn{display:none;}
+    .prob-list{display:none;}
+    .vc-nav { width: 36px; height: 36px; opacity: .92; }
+    .vc-nav svg { width: 16px; height: 16px; }
+    .vc-nav.prev { left: 0; }
+    .vc-nav.next { right: 0; }
+  }
+  .vc-dots { display: flex; gap: .4rem; justify-content: center; margin-top: .25rem; }
+  .vc-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--border);
+    cursor: pointer; transition: background .2s, width .2s;
+  }
+  .vc-dot.active { background: var(--accent); width: 18px; border-radius: 4px; }
 
   /* ── PRECIOS ─────────────────────────────────── */
   #precios { background: radial-gradient(ellipse 70% 60% at 25% 20%, rgba(0,212,170,.08), transparent 60%), var(--bg1); }
@@ -348,6 +406,25 @@
   .precio-list { list-style: none; text-align: left; display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.75rem; }
   .precio-list li { display: flex; gap: .6rem; font-size: .9rem; color: var(--text-muted); align-items: flex-start; }
   .precio-list li::before { content: "✓"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .pais-select-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    margin: 0 0 2rem;
+  }
+  .pais-select-label {
+    font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  #pais-select {
+    background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+    font-family: var(--font-body); font-size: .95rem; font-weight: 500;
+    padding: 10px 16px; border-radius: 10px; outline: none; cursor: pointer;
+    transition: border-color .2s; min-width: 220px; text-align: center;
+  }
+  #pais-select:focus, #pais-select:hover { border-color: var(--accent); }
+  #pais-select option { background: var(--bg2); color: var(--text); }
+  .precio-nota {
+    font-size: .78rem; color: var(--text-muted); margin-top: -1rem; margin-bottom: 1.5rem;
+  }
   .tabla-wrap {
     width: 100%;
     overflow-x: auto;
@@ -618,6 +695,25 @@
 
 <hr class="divider">
 
+  <!-- TESTIMONIOS -->
+<section id="testimonios">
+  <div class="code-particles" data-particles></div>
+  <div class="container">
+    <div class="section-label">Lo que dicen</div>
+    <h2 class="section-h2">Los Padres<br><em>Opinan del programa</em></h2>
+    <div class="vc-wrap reveal">
+      <button class="vc-nav prev" type="button" aria-label="Testimonio anterior" onclick="videoCarousel.prev()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="vc-viewport" id="vc-viewport"></div>
+      <button class="vc-nav next" type="button" aria-label="Siguiente testimonio" onclick="videoCarousel.next()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="vc-dots" id="vc-dots"></div>
+  </div>
+</section>
+
 <!-- NOSOTROS -->
 <section id="nosotros">
   <div class="code-particles" data-particles></div>
@@ -666,40 +762,7 @@
 
 <hr class="divider">
 
-<!-- TESTIMONIOS -->
-<section id="testimonios">
-  <div class="code-particles" data-particles></div>
-  <div class="container">
-    <div class="section-label">Lo que dicen</div>
-    <h2 class="section-h2">Los Padres<br><em>Opinan del programa</em></h2>
-    <div class="testi-grid">
-      <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <div class="testi-text">"Mi hijo de 10 años ya creó su primer juego en Roblox y se lo compartió a todos sus amigos. La emoción que tiene cada lunes esperando su clase es increíble."</div>
-        <div class="testi-author">
-          <div class="avatar" style="background:#2563af">MG</div>
-          <div><div class="testi-name">María González</div><div class="testi-role">Mamá de Sebastián, 10 años</div></div>
-        </div>
-      </div>
-      <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <div class="testi-text">"Lo mejor es que la clase es solo para mi hija. El profe Frederick sabe exactamente dónde está y qué necesita. Totalmente diferente a cualquier otro curso que probamos."</div>
-        <div class="testi-author">
-          <div class="avatar" style="background:#7c6fff">CA</div>
-          <div><div class="testi-name">Carlos Arteaga</div><div class="testi-role">Papá de Valeria, 13 años</div></div>
-        </div>
-      </div>
-      <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <div class="testi-text">"Mi hija tomó el curso de Blender y ahora quiere estudiar diseño 3D. Las clases son súper dinámicas y el profesor es muy paciente con ella."</div>
-        <div class="testi-author">
-          <div class="avatar" style="background:#00d4aa;color:#0d0d1a">LR</div>
-          <div><div class="testi-name">Laura Rodríguez</div><div class="testi-role">Mamá de Isabela, 14 años</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <hr class="divider">
 
@@ -710,11 +773,24 @@
     <div class="section-label">Precio</div>
     <h2 class="section-h2">Simple y <em>transparente</em></h2>
     <p class="section-sub">Un solo precio para todos los cursos. Sin sorpresas, sin cobros extra.</p>
+
+    <div class="pais-select-wrap">
+      <label class="pais-select-label" for="pais-select">¿Desde qué país nos visitas?</label>
+      <select id="pais-select">
+        <option value="CO">🇨🇴 Colombia</option>
+        <option value="EC">🇪🇨 Ecuador</option>
+        <option value="PE">🇵🇪 Perú</option>
+        <option value="MX">🇲🇽 México</option>
+        <option value="VE">🇻🇪 Venezuela</option>
+        <option value="US">🇺🇸 Estados Unidos</option>
+      </select>
+    </div>
+
     <div class="precio-wrap">
       <div class="precio-card reveal">
         <div class="precio-label">Clase individual · 1 curso</div>
-        <div class="precio-amount">$180.000</div>
-        <div class="precio-period">COP / mes · 8 clases al mes</div>
+        <div class="precio-amount" id="precio-amount">$180.000</div>
+        <div class="precio-period" id="precio-period">COP / mes · 8 clases al mes</div>
         <ul class="precio-list">
           <li>2 clases en vivo por semana</li>
           <li>Clase 100% individual</li>
@@ -1326,6 +1402,249 @@ document.querySelectorAll('[data-particles]').forEach(container => {
 // ── HINT FADE ──────────────────────────────
 setTimeout(() => { document.querySelector('.hero-hint').style.opacity='0.6'; }, 1500);
 window.addEventListener('scroll', () => { if(window.scrollY>80) document.querySelector('.hero-hint').style.opacity='0'; });
+
+// ═══════════════════════════════════════════════════════════════
+// CARRUSEL DE TESTIMONIOS EN VIDEO
+// Para agregar más testimonios en el futuro, solo añade un objeto
+// más a este arreglo (no hay que tocar el resto del código).
+// ═══════════════════════════════════════════════════════════════
+const testimoniosVideos = [
+  {
+    src: 'https://desarrolladorweb.online/0717.mp4',
+    poster: 'https://desarrolladorweb.online/geraldine.png',
+    stars: '★★★★★',
+    name: 'Geraldine Sepulveda',
+    role: 'Mamá de Juan Diego, 10 años',
+    avatarBg: '#2563af',
+    avatarInit: 'GS'
+  },
+  {
+    src: 'https://desarrolladorweb.online/0714.mp4',
+    poster: 'https://desarrolladorweb.online/yamileamazo.png',
+    stars: '★★★★★',
+    name: 'Yamile Amazo',
+    role: 'Mamá de Angel, 10 años',
+    avatarBg: '#7c6fff',
+    avatarInit: 'YA'
+  },
+  {
+    src: 'https://desarrolladorweb.online/0720.mp4',
+    poster: 'https://desarrolladorweb.online/martha.png',
+    stars: '★★★★★',
+    name: 'Martha Vargas',
+    role: 'Abuela de Alan, 8 años',
+    avatarBg: '#00d4aa',
+    avatarColor: '#0d0d1a',
+    avatarInit: 'MV'
+  }
+  // 👉 Ejemplo para agregar uno nuevo:
+  // {
+  //   src: 'videos/testimonio-nuevo.mp4',
+  //   poster: 'videos/testimonio-nuevo.jpg',
+  //   stars: '★★★★★',
+  //   name: 'Nombre Apellido',
+  //   role: 'Mamá/Papá de Niño/a, X años',
+  //   avatarBg: '#ff6b6b',
+  //   avatarInit: 'NA'
+  // }
+];
+
+(function initVideoCarousel() {
+  const viewport = document.getElementById('vc-viewport');
+  const dotsWrap = document.getElementById('vc-dots');
+  if (!viewport || !testimoniosVideos.length) return;
+
+  let currentVideo = null;  // único video reproduciéndose a la vez
+  let realIndex = 0;        // índice lógico (0..n-1) del slide centrado
+  let isJumping = false;    // evita reentradas durante el "salto" del loop infinito
+
+  const playIconSVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+
+  function buildSlide(item, copyName, dataIndex) {
+    const slide = document.createElement('div');
+    slide.className = 'vc-slide';
+    slide.dataset.index = dataIndex;
+    slide.dataset.copy = copyName;
+
+    const avatarStyle = `background:${item.avatarBg};` + (item.avatarColor ? `color:${item.avatarColor};` : '');
+
+    slide.innerHTML = `
+      <div class="vc-video-wrap">
+        <div class="stars">${item.stars || '★★★★★'}</div>
+        <video class="vc-video" preload="none" playsinline poster="${item.poster || ''}" controls>
+          <source src="${item.src}" type="video/mp4">
+        </video>
+        <button class="vc-play-btn" type="button" aria-label="Reproducir testimonio de ${item.name}">${playIconSVG}</button>
+      </div>
+      <div class="testi-author">
+        <div class="avatar" style="${avatarStyle}">${item.avatarInit}</div>
+        <div><div class="testi-name">${item.name}</div><div class="testi-role">${item.role}</div></div>
+      </div>
+    `;
+
+    const wrap = slide.querySelector('.vc-video-wrap');
+    const video = slide.querySelector('.vc-video');
+    const btn = slide.querySelector('.vc-play-btn');
+
+    btn.addEventListener('click', () => {
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+    });
+
+    // Al reproducir un video, se pausa automáticamente el que estaba sonando.
+    video.addEventListener('play', () => {
+      if (currentVideo && currentVideo !== video) currentVideo.pause();
+      currentVideo = video;
+      wrap.classList.add('playing');
+    });
+    video.addEventListener('pause', () => {
+      wrap.classList.remove('playing');
+      if (currentVideo === video) currentVideo = null;
+    });
+    video.addEventListener('ended', () => {
+      wrap.classList.remove('playing');
+      video.currentTime = 0;
+      if (currentVideo === video) currentVideo = null;
+    });
+
+    return slide;
+  }
+
+  // Se renderizan 3 copias (before / main / after) para lograr scroll infinito real
+  // manteniendo la posibilidad de arrastrar/escrolear libremente.
+  const frag = document.createDocumentFragment();
+  ['before', 'main', 'after'].forEach(copyName => {
+    testimoniosVideos.forEach((item, i) => frag.appendChild(buildSlide(item, copyName, i)));
+  });
+  viewport.appendChild(frag);
+
+  // Puntos indicadores (según el índice lógico)
+  const dots = testimoniosVideos.map((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'vc-dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+    return d;
+  });
+  function updateDots() { dots.forEach((d, i) => d.classList.toggle('active', i === realIndex)); }
+
+  function pauseCurrent() { if (currentVideo) currentVideo.pause(); }
+
+  function scrollToChild(child, smooth) {
+    const targetLeft = child.offsetLeft - (viewport.clientWidth - child.clientWidth) / 2;
+    viewport.scrollTo({ left: targetLeft, behavior: smooth ? 'smooth' : 'auto' });
+  }
+
+  function currentCenteredSlide() {
+    const center = viewport.scrollLeft + viewport.clientWidth / 2;
+    let closest = null, closestDist = Infinity;
+    viewport.querySelectorAll('.vc-slide').forEach(s => {
+      const mid = s.offsetLeft + s.clientWidth / 2;
+      const dist = Math.abs(mid - center);
+      if (dist < closestDist) { closestDist = dist; closest = s; }
+    });
+    return closest;
+  }
+
+  // Cuando el scroll (manual o por botón) termina sobre una copia clon
+  // (before/after), saltamos sin animación a la misma posición en la
+  // copia "main" — así el loop se siente infinito y sin cortes.
+  let scrollTimer = null;
+  viewport.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(onScrollSettle, 120);
+  }, { passive: true });
+
+  function onScrollSettle() {
+    if (isJumping) return;
+    const centered = currentCenteredSlide();
+    if (!centered) return;
+    realIndex = parseInt(centered.dataset.index, 10);
+    updateDots();
+
+    if (centered.dataset.copy !== 'main') {
+      const equivalent = viewport.querySelector(
+        `.vc-slide[data-copy="main"][data-index="${centered.dataset.index}"]`
+      );
+      if (equivalent) {
+        isJumping = true;
+        viewport.classList.add('jumping');
+        scrollToChild(equivalent, false);
+        requestAnimationFrame(() => {
+          viewport.classList.remove('jumping');
+          isJumping = false;
+        });
+      }
+    }
+  }
+
+  function goTo(index) {
+    pauseCurrent();
+    const centered = currentCenteredSlide();
+    const copy = centered ? centered.dataset.copy : 'main';
+    const target = viewport.querySelector(`.vc-slide[data-copy="${copy}"][data-index="${index}"]`);
+    if (target) scrollToChild(target, true);
+  }
+
+  function step(dir) {
+    pauseCurrent();
+    const all = [...viewport.querySelectorAll('.vc-slide')];
+    const centered = currentCenteredSlide();
+    if (!centered) return;
+    let pos = all.indexOf(centered) + dir;
+    if (pos < 0) pos = all.length - 1;
+    if (pos >= all.length) pos = 0;
+    scrollToChild(all[pos], true);
+  }
+
+  // API pública usada por los botones de navegación (onclick en el HTML)
+  window.videoCarousel = { next: () => step(1), prev: () => step(-1) };
+
+  window.addEventListener('resize', () => {
+    const mainCentered = viewport.querySelector(`.vc-slide[data-copy="main"][data-index="${realIndex}"]`);
+    if (mainCentered) scrollToChild(mainCentered, false);
+  });
+
+  // Posición inicial: primer slide de la copia "main"
+  scrollToChild(viewport.querySelector('.vc-slide[data-copy="main"][data-index="0"]'), false);
+})();
+</script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// PRECIOS POR PAÍS
+// El precio en Colombia se mantiene en $180.000 COP.
+// Para el resto de países se muestra el equivalente aproximado a
+// 50 USD en su moneda local, según el tipo de cambio de referencia.
+// 👉 Para actualizar los montos cuando cambie el tipo de cambio,
+//    solo edita los valores "amount" de cada país abajo.
+// ═══════════════════════════════════════════════════════════════
+const preciosPorPais = {
+  CO: { amount: '$180.000', period: 'COP / mes · 8 clases al mes' },
+  EC: { amount: '$50',      period: 'USD / mes · 8 clases al mes' }, // Ecuador usa el dólar estadounidense
+  PE: { amount: 'S/ 175',   period: 'PEN / mes · 8 clases al mes' }, // ≈ 50 USD
+  MX: { amount: '$875',    period: 'MXN / mes · 8 clases al mes' }, // ≈ 50 USD
+  VE: { amount: '$50',      period: 'USD / mes · 8 clases al mes (ref.)' }, // se cotiza en USD por la variación del bolívar
+  US: { amount: '$50',      period: 'USD / month · 8 classes a month' }
+};
+
+(function initSelectorPais() {
+  const select = document.getElementById('pais-select');
+  const amountEl = document.getElementById('precio-amount');
+  const periodEl = document.getElementById('precio-period');
+  if (!select || !amountEl || !periodEl) return;
+
+  function aplicarPais(codigo) {
+    const datos = preciosPorPais[codigo] || preciosPorPais.CO;
+    amountEl.textContent = datos.amount;
+    periodEl.textContent = datos.period;
+  }
+
+  select.addEventListener('change', () => aplicarPais(select.value));
+
+  // Estado inicial (Colombia, tal como estaba antes de agregar el selector)
+  aplicarPais(select.value);
+})();
 </script>
 </body>
 </html>
