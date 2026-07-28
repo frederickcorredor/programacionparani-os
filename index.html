@@ -814,10 +814,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>Precio / mes</td><td>$1.060.800+</td><td>$159.000</td><td>$180.000</td></tr>
+              <tr><td>Precio / mes</td><td id="tabla-kodland-mes">$1.060.800+</td><td id="tabla-creativos-mes">$159.000</td><td id="tabla-nosotros-mes">$180.000</td></tr>
               <tr><td>Clases / mes</td><td>4–8 grupo</td><td>4 grupo</td><td>8 individual</td></tr>
               <tr><td>Modalidad</td><td>Grupal</td><td>Grupal</td><td>1 a 1</td></tr>
-              <tr><td>Precio/clase</td><td>$33.000+</td><td>$39.750</td><td>$22.500</td></tr>
+              <tr><td>Precio/clase</td><td id="tabla-kodland-clase">$33.000+</td><td id="tabla-creativos-clase">$39.750</td><td id="tabla-nosotros-clase">$22.500</td></tr>
             </tbody>
           </table>
         </div>
@@ -1616,28 +1616,63 @@ const testimoniosVideos = [
 // El precio en Colombia se mantiene en $180.000 COP.
 // Para el resto de países se muestra el equivalente aproximado a
 // 50 USD en su moneda local, según el tipo de cambio de referencia.
+// La tabla comparativa (Kodland / Creativos / Nosotros) también se
+// convierte a cada moneda usando ese mismo tipo de cambio.
 // 👉 Para actualizar los montos cuando cambie el tipo de cambio,
-//    solo edita los valores "amount" de cada país abajo.
+//    solo edita los valores de cada país abajo.
 // ═══════════════════════════════════════════════════════════════
 const preciosPorPais = {
-  CO: { amount: '$180.000', period: 'COP / mes · 8 clases al mes' },
-  EC: { amount: '$50',      period: 'USD / mes · 8 clases al mes' }, // Ecuador usa el dólar estadounidense
-  PE: { amount: 'S/ 175',   period: 'PEN / mes · 8 clases al mes' }, // ≈ 50 USD
-  MX: { amount: '$875',    period: 'MXN / mes · 8 clases al mes' }, // ≈ 50 USD
-  VE: { amount: '$50',      period: 'USD / mes · 8 clases al mes (ref.)' }, // se cotiza en USD por la variación del bolívar
-  US: { amount: '$50',      period: 'USD / month · 8 classes a month' }
+  CO: {
+    amount: '$180.000', period: 'COP / mes · 8 clases al mes',
+    tabla: { kodlandMes: '$1.060.800+', creativosMes: '$159.000', nosotrosMes: '$180.000',
+             kodlandClase: '$33.000+',  creativosClase: '$39.750', nosotrosClase: '$22.500' }
+  },
+  EC: { // Ecuador usa el dólar estadounidense
+    amount: '$50', period: 'USD / mes · 8 clases al mes',
+    tabla: { kodlandMes: '$328+', creativosMes: '$49', nosotrosMes: '$50',
+             kodlandClase: '$10+', creativosClase: '$12', nosotrosClase: '$6,25' }
+  },
+  PE: { // ≈ 50 USD al tipo de cambio de referencia
+    amount: 'S/ 175', period: 'PEN / mes · 8 clases al mes',
+    tabla: { kodlandMes: 'S/ 1.150+', creativosMes: 'S/ 170', nosotrosMes: 'S/ 175',
+             kodlandClase: 'S/ 36+',  creativosClase: 'S/ 43', nosotrosClase: 'S/ 22' }
+  },
+  MX: { // ≈ 50 USD al tipo de cambio de referencia
+    amount: '$875', period: 'MXN / mes · 8 clases al mes',
+    tabla: { kodlandMes: '$5.740+', creativosMes: '$858', nosotrosMes: '$875',
+             kodlandClase: '$179+',  creativosClase: '$215', nosotrosClase: '$109' }
+  },
+  VE: { // se cotiza en USD por la fuerte variación diaria del bolívar
+    amount: '$50', period: 'USD / mes · 8 clases al mes (ref.)',
+    tabla: { kodlandMes: '$328+', creativosMes: '$49', nosotrosMes: '$50',
+             kodlandClase: '$10+', creativosClase: '$12', nosotrosClase: '$6,25' }
+  },
+  US: {
+    amount: '$50', period: 'USD / month · 8 classes a month',
+    tabla: { kodlandMes: '$328+', creativosMes: '$49', nosotrosMes: '$50',
+             kodlandClase: '$10+', creativosClase: '$12', nosotrosClase: '$6.25' }
+  }
 };
 
 (function initSelectorPais() {
   const select = document.getElementById('pais-select');
   const amountEl = document.getElementById('precio-amount');
   const periodEl = document.getElementById('precio-period');
+  const tablaIds = {
+    kodlandMes: 'tabla-kodland-mes', creativosMes: 'tabla-creativos-mes', nosotrosMes: 'tabla-nosotros-mes',
+    kodlandClase: 'tabla-kodland-clase', creativosClase: 'tabla-creativos-clase', nosotrosClase: 'tabla-nosotros-clase'
+  };
   if (!select || !amountEl || !periodEl) return;
 
   function aplicarPais(codigo) {
     const datos = preciosPorPais[codigo] || preciosPorPais.CO;
     amountEl.textContent = datos.amount;
     periodEl.textContent = datos.period;
+
+    Object.keys(tablaIds).forEach(key => {
+      const el = document.getElementById(tablaIds[key]);
+      if (el && datos.tabla[key]) el.textContent = datos.tabla[key];
+    });
   }
 
   select.addEventListener('change', () => aplicarPais(select.value));
